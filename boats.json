@@ -1,0 +1,92 @@
+{
+    "boats":    [
+        {
+            "type": "Fishing Boat",
+            "desc": "For fishing on weekends",
+            "cap": 45,
+            "size": 2,
+            "cost": 100,
+            "relB": 80,
+            "relI": 5,
+            "cspB": 20,
+            "cspI": 10
+        },
+        {
+            "type": "Longliner",
+            "desc": "Catches with 1 long line",
+            "cap": 100,
+            "size": 4,
+            "cost": 300,
+            "relB": 70,
+            "relI": 1,
+            "cspB": 40,
+            "cspI": 3
+        },
+        {
+            "type": "Small Yacht",
+            "desc": "Leisure vessel for four",
+            "cap": 60,
+            "size": 4,
+            "cost": 250,
+            "relB": 84,
+            "relI": 2,
+            "cspB": 30,
+            "cspI": 2
+        },
+        {
+            "type": "Yacht",
+            "desc": "Leisure vessel with bar",
+            "cap": 180,
+            "size": 8,
+            "cost": 350,
+            "relB": 86,
+            "relI": 1,
+            "cspB": 32,
+            "cspI": 2
+        },
+        {
+            "type": "Small Trawler",
+            "desc": "Drags a net along the sea floor",
+            "cap": 400,
+            "size": 6,
+            "cost": 550,
+            "relB": 60,
+            "relI": 5,
+            "cspB": 60,
+            "cspI": 2
+        },
+        {
+            "type": "Trawler",
+            "desc": "Larger ship, larger net",
+            "cap": 800,
+            "size": 10,
+            "cost": 1000,
+            "relB": 50,
+            "relI": 4,
+            "cspB": 70,
+            "cspI": 1
+        },
+        {
+            "type": "Small Seine",
+            "desc": "Shallow net on each side",
+            "cap": 300,
+            "size": 6,
+            "cost": 450,
+            "relB": 77,
+            "relI": 3,
+            "cspB": 50,
+            "cspI": 2
+        },
+        {
+            "type": "Seine Boat",
+            "desc": "Larger; two nets either side",
+            "cap": 500,
+            "size": 10,
+            "cost": 850,
+            "relB": 65,
+            "relI": 3,
+            "cspB": 65,
+            "cspI": 1
+        }
+    ]
+}
