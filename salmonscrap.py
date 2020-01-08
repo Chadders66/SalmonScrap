@@ -3,6 +3,8 @@ from PIL import ImageTk,Image
 import json
 import os
 
+path = 'SalmonScrap/GUI/SalmonScrap/boats.json'
+
 startingMoney = 4000
 playerList = []
 forSaleBoats = []
@@ -15,7 +17,7 @@ help2 = [0, 2, 0, 2]
 help3 = [0, 0, 1, 1]
 help4 = [0, 1, 0, 1]
 
-with open('boats.json') as json_file:
+with open(path) as json_file:
     boats = json.load(json_file)
 
 root = Tk()
@@ -59,7 +61,7 @@ class Player:
         self.name = name
         self.money = startingMoney
         self.boats = []
-        self.staff = 0
+        self.staff = []
         self.frame = []
         self.labels = []
         currentPlayers = len(playerList)
@@ -75,6 +77,7 @@ class Player:
             self.money = self.money - (self.staff[x].count('N') * 100)      #Novice weekly wages
             self.money = self.money - (self.staff[x].count('E') * 200)      #Expert weekly wages
             self.money = self.money - (self.staff[x].count('V') * 300)      #Veteran weekly wages
+
         for x in range (len(self.boats)):
             self.boats[x].relB = (self.boats[x].relB + 
             (self.staff[x].count('N') * 0.4 * self.boats[x].relI) +     #Novice reliability multiplier
@@ -116,17 +119,7 @@ class Boat:
         player.boats[currentboats].loc = "In Harbour"
         player.boats[currentboats].player = player
         player.boats[currentboats].image = boats[choice]['image']
-        
-    def hire(self, player, rank, hirereq):
-        for x in range(hirereq):
-            self.crew.append(rank)
-            if rank == 'V':
-                player.money = player.money - 200
-            elif rank == 'E': 
-                player.money = player.money - 100
-            elif rank == 'N':
-                player.money = player.money - 50
-        
+            
     def hire(self, player, boat, rank, hirereq):
         if len(self.crew) == 0:
             emptyList = []
