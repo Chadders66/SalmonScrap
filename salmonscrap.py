@@ -15,7 +15,7 @@ help2 = [0, 2, 0, 2]
 help3 = [0, 0, 1, 1]
 help4 = [0, 1, 0, 1]
 
-with open('SalmonScrap/GUI/SalmonScrap/boats.json') as json_file:
+with open('boats.json') as json_file:
     boats = json.load(json_file)
 
 root = Tk()
@@ -70,6 +70,17 @@ class Player:
     def printStats(self):
         print("Player %d (%s):  Money: %s" %(self.pnum,self.name,self.money))
 
+    def update(self):
+        for x in range (len(self.staff)):
+            self.money = self.money - (self.staff[x].count('N') * 100)      #Novice weekly wages
+            self.money = self.money - (self.staff[x].count('E') * 200)      #Expert weekly wages
+            self.money = self.money - (self.staff[x].count('V') * 300)      #Veteran weekly wages
+        for x in range (len(self.boats)):
+            self.boats[x].relB = (self.boats[x].relB + 
+            (self.staff[x].count('N') * 0.4 * self.boats[x].relI) +     #Novice reliability multiplier
+            (self.staff[x].count('E') * 0.75 * self.boats[x].relI) +     #Expert reliability multiplier
+            (self.staff[x].count('V') * 1 * self.boats[x].relI))        #Veteran reliability multiplier
+
 
 class Boat:
     def __init__(self, name):
@@ -115,6 +126,20 @@ class Boat:
                 player.money = player.money - 100
             elif rank == 'N':
                 player.money = player.money - 50
+        
+    def hire(self, player, boat, rank, hirereq):
+        if len(self.crew) == 0:
+            emptyList = []
+            player.staff.append(emptyList)
+        for x in range(hirereq):
+            self.crew.append(rank)
+            player.staff[boat].append(rank)
+            if rank == 'V':
+                player.money = player.money - 200       #Novice cost to hire
+            elif rank == 'E':
+                player.money = player.money - 100       #Expert cost to hire
+            elif rank == 'N':
+                player.money = player.money - 50        #Veteran cost to hire
 
 initBoats()
 
@@ -124,9 +149,5 @@ player1 = Player("Andrew")
 player2 = Player("Chadders")
 
 populateFrames()
-
-# forSaleBoats[0].buyBoat(player1, 'Fishing Boat', 'H.M.S. Riven')
-
-# player1.printStats()
 
 root.mainloop()
