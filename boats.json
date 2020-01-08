@@ -7,27 +7,30 @@
         "relB": 80,
         "relI": 5,
         "cspB": 20,
-        "cspI": 10
+        "cspI": 10,
+        "image": "fishingboat.png"
     },
     "Longliner" : {
-            "desc": "Catches with 1 long line",
-            "cap": 100,
-            "size": 4,
-            "cost": 300,
-            "relB": 70,
-            "relI": 1,
-            "cspB": 40,
-            "cspI": 3
+        "desc": "Catches with 1 long line",
+        "cap": 100,
+        "size": 4,
+        "cost": 300,
+        "relB": 70,
+        "relI": 1,
+        "cspB": 40,
+        "cspI": 3,
+        "image": "longliner.png"
     },
     "Small Yacht" : {
-            "desc": "Leisure vessel for four",
-            "cap": 60,
-            "size": 4,
-            "cost": 250,
-            "relB": 84,
-            "relI": 2,
-            "cspB": 30,
-            "cspI": 2
+        "desc": "Leisure vessel for four",
+        "cap": 60,
+        "size": 4,
+        "cost": 250,
+        "relB": 84,
+        "relI": 2,
+        "cspB": 30,
+        "cspI": 2,
+        "image": "smallyacht.png"
     },
     "Yacht" : {
         "desc": "Leisure vessel with bar",
@@ -37,7 +40,8 @@
         "relB": 86,
         "relI": 1,
         "cspB": 32,
-        "cspI": 2
+        "cspI": 2,
+        "image": "yacht.png"
     },
     "Small Trawler" : {
         "desc": "Drags a net along the sea floor",
@@ -47,7 +51,8 @@
         "relB": 60,
         "relI": 5,
         "cspB": 60,
-        "cspI": 2
+        "cspI": 2,
+        "image": "small.png"
     },
     "Trawler" : {
         "desc": "Larger ship, larger net",
@@ -57,7 +62,8 @@
         "relB": 50,
         "relI": 4,
         "cspB": 70,
-        "cspI": 1
+        "cspI": 1,
+        "image": "large.png"
     },
     "Small Seine" : {
         "desc": "Small net to encircle fish",
@@ -67,7 +73,8 @@
         "relB": 77,
         "relI": 3,
         "cspB": 50,
-        "cspI": 2
+        "cspI": 2,
+        "image": "small.png"
     },
     "Seine Boat" : {
         "desc": "Larger and deeper net",
@@ -77,6 +84,7 @@
         "relB": 65,
         "relI": 3,
         "cspB": 65,
-        "cspI": 1
+        "cspI": 1,
+        "image": "large.png"
     }
 }
