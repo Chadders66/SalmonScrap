@@ -44,7 +44,7 @@
         "image": "yacht.png"
     },
     "Small Trawler" : {
-        "desc": "Drags a net along the sea floor",
+        "desc": "Drags a huge net",
         "cap": 400,
         "size": 6,
         "cost": 550,
