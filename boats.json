@@ -6,7 +6,7 @@
         "cost": 100,
         "relB": 80,
         "relI": 5,
-        "cspB": 20,
+        "cspB": 70,
         "cspI": 10,
         "image": "fishingboat.png"
     },
@@ -17,8 +17,8 @@
         "cost": 300,
         "relB": 70,
         "relI": 1,
-        "cspB": 40,
-        "cspI": 3,
+        "cspB": 70,
+        "cspI": 5,
         "image": "longliner.png"
     },
     "Small Yacht" : {
@@ -28,7 +28,7 @@
         "cost": 250,
         "relB": 84,
         "relI": 2,
-        "cspB": 30,
+        "cspB": 60,
         "cspI": 2,
         "image": "smallyacht.png"
     },
@@ -39,7 +39,7 @@
         "cost": 350,
         "relB": 86,
         "relI": 1,
-        "cspB": 32,
+        "cspB": 40,
         "cspI": 2,
         "image": "yacht.png"
     },
@@ -61,8 +61,8 @@
         "cost": 1000,
         "relB": 50,
         "relI": 4,
-        "cspB": 70,
-        "cspI": 1,
+        "cspB": 40,
+        "cspI": 2,
         "image": "large.png"
     },
     "Small Seine" : {
