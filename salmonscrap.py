@@ -11,6 +11,8 @@ path = ''
 startingMoney = 6000
 forSaleBoats = []
 forSaleNames = ['Fishing Boat', 'Longliner', 'Small Yacht', 'Yacht', 'Small Trawler', 'Trawler', 'Small Seine', 'Seine Boat']
+locations = []
+
 imageList = []
 masterButtons = []
 
@@ -76,7 +78,7 @@ class Gamestate:
             self.turn += 1
             self.player = self.playerList[self.turn]
         self.redoString()
-        
+
 def initBoats():
     for x in range(len(forSaleNames)):
         forSaleBoats.append(Boat(forSaleNames[x]))
@@ -87,6 +89,8 @@ def resizeImages():
         imageList[x] = imageList[x].resize((165, 130), Image.ANTIALIAS)
     imageList.append(Image.open(path + "assets/blank.png"))
     imageList[8] = imageList[8].resize((165, 130), Image.ANTIALIAS)
+    imageList.append(Image.open(path + "assets/map.png"))
+    imageList[9] = imageList[9].resize((460, 567), Image.ANTIALIAS)
 
 def close(window):
     closed = window
@@ -236,21 +240,29 @@ def hirepop(p):
     buttonList[6].grid(row=6, column=1, ipadx=10, ipady=10, sticky='E')
     buttonList.append(Button(frameList[0], text='Cancel', width=10, command=lambda i=hirePop: close(i)))
     buttonList[7].grid(row=6, column=2, ipadx=10, ipady=10, sticky='W')
-
+    
 def launchpop(p):
-    print('Bloop')
+    map_img = ImageTk.PhotoImage(imageList[9])
+    launchPop = Toplevel()
+    player = game.playerList[game.turn]
+    launchPop.title(player.name + ": choose a location to fish")
+    launchPop.geometry("1000x590+230+100")
+    launchLabels = []
+    launchLabels.append(Label(launchPop, image=map_img))
+    launchLabels[0].image = map_img
+    launchLabels[0].grid(row=0, column=0, rowspan=4)
 
 def renamepop(p):
-    print('Bloop')
+    print('rename')
 
 def firepop(p):
-    print('Bloop')
+    print('fire')
 
 def sellpop(p):
-    print('Bloop')
+    print('sell')
 
 def repairpop(p):
-    print('Bloop')
+    print('repair')
 
 def populateFrames():
     img_blank = ImageTk.PhotoImage(imageList[8])
@@ -456,51 +468,37 @@ class Boat:
                     player.money = player.money - 50        #Veteran cost to hire
 
 class Location:
-    def __init__(self, name):
+    def __init__(self, name, bdamage, temp, waves, rain, fishtype):
         self.name = name
-        self.bdamage = 0
-        self.temp = 0
-        self.waves = 0                                              
-        self.rain = 0                                              
+        self.bdamage = bdamage
+        self.temp = temp
+        self.waves = waves                                              
+        self.rain = rain                                              
         self.sailing = []                                          
-        self.fishtype = []                                         
+        self.fishtype = fishtype                                         
         self.amtfished = 0                                         
         self.fishab = 1                                            
         self.regrowth = 0
         self.turnsempty = 0
-locations = []
-locations.append(Location('Harbour'))
-locations.append(Location('Coast'))
-locations.append(Location('Ocean'))
-locations.append(Location('Deep Sea'))
+
+    def rerollLoc(self):
+        index = locations.index(self)
+        base = [1, 1, 1, 5]
+        peak = [3, 5, 10, 15]
+        self.temp = random.randrange(base[index],peak[index],1)
+        self.waves = random.randrange(base[index],peak[index],1)
+        self.rain = random.randrange(base[index],peak[index],1)
+    
 
 def initLoc():
-    locations[0].bdamage = 0
-    locations[0].temp = random.randrange(1,3,1)
-    locations[0].waves = random.randrange(1,3,1)
-    locations[0].rain = random.randrange(1,3,1)
-    locations[0].fishtype.append('Tiddlers')
-    locations[1].bdamage = 5
-    locations[1].temp = random.randrange(1,5,1)
-    locations[1].waves = random.randrange(1,5,1)
-    locations[1].rain = random.randrange(1,5,1)
-    locations[1].fishtype.append('Salmon')
-    locations[2].bdamage = 10
-    locations[2].temp = random.randrange(1,10,1)
-    locations[2].waves = random.randrange(1,10,1)
-    locations[2].rain = random.randrange(1,10,1)
-    locations[2].fishtype.append('idk? big ones or smth')
-    locations[3].bdamage = 20
-    locations[3].temp = random.randrange(5,15,1)
-    locations[3].waves = random.randrange(5,15,1)
-    locations[3].rain = random.randrange(5,15,1)
-    locations[3].fishtype.append('yo momma')
+    locations.append(Location('Buchan Deep', 0, random.randrange(1,3,1), random.randrange(1,3,1), random.randrange(1,3,1), 'Hake'))
+    locations.append(Location('Scalp Bank', 5, random.randrange(1,5,1), random.randrange(1,5,1), random.randrange(1,5,1), 'Cod'))
+    locations.append(Location('Long Forties', 10, random.randrange(1,10,1), random.randrange(1,10,1), random.randrange(1,10,1), 'Salmon'))
+    locations.append(Location('Devil`s Hole', 20, random.randrange(5,15,1), random.randrange(5,15,1), random.randrange(5,15,1), 'Tuna'))
 
 def travel(self, boat, locfrom, locto):
     locations[locto].append(player1.boats[boat])
     locations[locfrom].remove(player1.boats[boat])
-
-weather = random.randrange(1,10,1)
 
 initBoats()
 
