@@ -116,9 +116,16 @@ def playerEnable():
     mainDisable()
     player = game.playerList[game.turn]
     buttons = player.buttons
-    for x in buttons:
-        for y in x:
-            y.configure(state=NORMAL)
+    for x in buttons[0]:
+        x.configure(state=NORMAL)
+    currboats = len(player.boats)
+    if currboats == 1:
+        for a in buttons[1]:
+            a.configure(state=NORMAL)
+    else:
+        for y in range(1, currboats+1):
+            for z in buttons[y]:
+                z.configure(state=NORMAL)
 
 def endTurnpop():
     mainDisable()
@@ -150,32 +157,45 @@ def conBoat(window, selList, player):
         if x.cget('bg') == 'Blue':
             selection = selList.index(x)
             forSaleBoats[selection].buyBoat(player, forSaleNames[selection], 'H.M.S. Riven')
+    playerEnable()
     close(window)
 
 def buyBoatpop():
     mainDisable()
-    buyBoatPop = Toplevel()
     player = game.playerList[game.turn]
-    buyBoatPop.title(player.name + ": choose a boat")
-    buyBoatPop.geometry("950x400+280+180")
-    saleLabels = []
-    saleButtons = []
-    for x in forSaleBoats:
-        stats = (str(x.type))+'\n'+(str(x.desc))+'\n Holds '+(str(x.cap))+'kg of fish'+'\n Holds '+(str(x.size))+' crew members'+'\n £'+(str(x.cost))
-        index = forSaleBoats.index(x)
-        imagio = ImageTk.PhotoImage(imageList[index])
-        saleLabels.append(Label(buyBoatPop, image=imagio, text=stats, justify=CENTER, compound=CENTER, font='Arial 10 bold'))
-        saleLabels[index].image = imagio
-        saleLabels[index].grid(row=help9[index], column=help10[index], padx=10, pady=10)
-        saleButtons.append(Button(buyBoatPop, text=x.type, command=selBoat))
-        saleButtons[index].configure(command=lambda h=x.type, i=saleLabels: selBoat(h, i))
-        saleButtons[index].grid(row=(help9[index])+1, column=help10[index])
-    saleButtons.append(Button(buyBoatPop, text='Confirm', width=10, command=lambda p=buyBoatPop, i=saleLabels, q=player: conBoat(p, i, q)))
-    saleButtons[(len(saleButtons))-1].grid(row=4, column=2)
-    saleButtons.append(Button(buyBoatPop, text='Cancel', width=10, command=lambda p=buyBoatPop: close(p)))
-    saleButtons[(len(saleButtons))-1].grid(row=4, column=3)
-    buyBoatPop.mainloop()
-    
+    if len(player.boats) == 4:
+        tooManyBoats()
+    else:
+        buyBoatPop = Toplevel()
+        buyBoatPop.title(player.name + ": choose a boat")
+        buyBoatPop.geometry("950x400+280+180")
+        saleLabels = []
+        saleButtons = []
+        for x in forSaleBoats:
+            stats = (str(x.type))+'\n'+(str(x.desc))+'\n Holds '+(str(x.cap))+'kg of fish'+'\n Holds '+(str(x.size))+' crew members'+'\n £'+(str(x.cost))
+            index = forSaleBoats.index(x)
+            imagio = ImageTk.PhotoImage(imageList[index])
+            saleLabels.append(Label(buyBoatPop, image=imagio, text=stats, justify=CENTER, compound=CENTER, font='Arial 10 bold'))
+            saleLabels[index].image = imagio
+            saleLabels[index].grid(row=help9[index], column=help10[index], padx=10, pady=10)
+            saleButtons.append(Button(buyBoatPop, text=x.type, command=selBoat))
+            saleButtons[index].configure(command=lambda h=x.type, i=saleLabels: selBoat(h, i))
+            saleButtons[index].grid(row=(help9[index])+1, column=help10[index])
+        saleButtons.append(Button(buyBoatPop, text='Confirm', width=10, command=lambda p=buyBoatPop, i=saleLabels, q=player: conBoat(p, i, q)))
+        saleButtons[(len(saleButtons))-1].grid(row=4, column=2)
+        saleButtons.append(Button(buyBoatPop, text='Cancel', width=10, command=lambda p=buyBoatPop: close(p)))
+        saleButtons[(len(saleButtons))-1].grid(row=4, column=3)
+        buyBoatPop.mainloop()
+
+def tooManyBoats():
+    mainDisable()
+    tooManyBoats = Toplevel()
+    tooManyBoats.geometry("215x170+650+300")
+    nope = Label(tooManyBoats, text="You already have 4 boats!\n\nYou have to sell one to\nbe able to buy more!", padx=40, pady=20)
+    nope.grid(row=0, column=1)
+    nopeb = Button(tooManyBoats, text="OK", width=10, command=lambda p=tooManyBoats: close(p))
+    nopeb.grid(row=1, column=1)
+
 def sellFishpop():
     print('Bloop')
 
@@ -184,7 +204,6 @@ def incremHire(label):
     var += 1
     label.configure(text=str(var))
     
-
 def decremHire(label):
     var = int(label.cget('text'))
     var -= 1
@@ -210,13 +229,15 @@ def conHire(labelList, window, boat):
         '\nSells for: £'+boatStatsView[6]+
         '0 \nCurrently: '+boatStatsView[7], font='Arial 10 bold')
     player.labels[0].configure(text=player.stats)
+    playerEnable()
     close(window)
 
 def hirepop(p):
+    mainDisable()
     parse = whichButton(p)
-    boat = parse[1]
+    boatnum = parse[1]
     player = game.playerList[game.turn]
-    boat = player.boats[boat-1]
+    boat = player.boats[boatnum-1]
     inda = forSaleNames.index(boat.type)
     imageh = ImageTk.PhotoImage(imageList[inda])
     hirePop = Toplevel()
@@ -230,19 +251,27 @@ def hirepop(p):
     frameList.append(LabelFrame(hirePop))
     frameList[0].grid(row=0, column=0, rowspan=6, columnspan=5, padx=5, pady=5)
     for a in range(3):                                         
-        labelList.append(Label(frameList[0], text=str(currList[a]), bg='Yellow'))    
+        labelList.append(Label(frameList[0], text=str(currList[a]), bg='Yellow', font='Arial 16 bold'))    
         labelList[a].grid(row=2*a, column=3, rowspan=2, ipadx=50, ipady=38)          
-    for b in range(3):                                          
-        labelList.append(Label(frameList[0], text="somethin"))   
-        labelList[b+3].grid(row=2*b, column=2, rowspan=2, ipadx=10, ipady=10)         
-    labelList.append(Label(frameList[0], image=imageh))   
+    for b in range(3):
+        crewinfo = ['Novice Crew\n£50 to hire \n£100 per week',
+                    'Experienced Crew\n£100 to hire\n£200 per week',
+                    'Veteran Crew\n £200 to hire\n £300 per week']                                          
+        labelList.append(Label(frameList[0], text=crewinfo[b], font='Arial 10 bold'))   
+        labelList[b+3].grid(row=2*b, column=2, rowspan=2, ipadx=10, ipady=10)
+    boatStatsView = getStats(player, boatnum-1)        
+    labelList.append(Label(frameList[0], image=imageh, justify=CENTER, compound=CENTER, text= boatStatsView[0]+'\n'+boatStatsView[1]+
+        '\nHolding: '+boatStatsView[2]+' / '+boatStatsView[3]+
+        ' kg\nCrew: '+boatStatsView[4]+' / '+boatStatsView[5]+
+        '\nSells for: £'+boatStatsView[6]+
+        '0 \nCurrently: '+boatStatsView[7], font='Arial 10 bold'))   
     labelList[6].image = imageh
     labelList[6].grid(row=0, column=0, rowspan=6, columnspan=2)         
     for z in range(3):                                          
-        buttonList.append(Button(frameList[0], text='+', width=10, command=lambda p=labelList[z]: incremHire(p)))
+        buttonList.append(Button(frameList[0], text='+', width=10, font='Arial 10 bold', command=lambda p=labelList[z]: incremHire(p)))
         buttonList[z].grid(row=2*z, column=4, sticky='N', ipady=11)
     for x in range(3):
-        buttonList.append(Button(frameList[0], text='-', width=10, command=lambda p=labelList[x]: decremHire(p)))
+        buttonList.append(Button(frameList[0], text='-', width=10, font='Arial 10 bold', command=lambda p=labelList[x]: decremHire(p)))
         buttonList[x+3].grid(row=(2*x)+1, column=4, sticky='S', ipady=11)
     buttonList.append(Button(frameList[0], text='Confirm', width=10, command=lambda h=labelList, i=hirePop, j=boat: conHire(h, i, j)))
     buttonList[6].grid(row=6, column=1, ipadx=10, ipady=10, sticky='E')
@@ -411,7 +440,6 @@ class Player:
             elif len(locations[x].sailing) > 0:
                 locations[x].turnsempty = 0
 
-
 class Boat:
     def __init__(self, name):
         self.name = 'For Sale'
@@ -500,7 +528,6 @@ class Location:
         self.waves = random.randrange(base[index],peak[index],1)
         self.rain = random.randrange(base[index],peak[index],1)
     
-
 def initLoc():
     locations.append(Location('Buchan Deep', 0, random.randrange(1,3,1), random.randrange(1,3,1), random.randrange(1,3,1), 'Hake'))
     locations.append(Location('Scalp Bank', 5, random.randrange(1,5,1), random.randrange(1,5,1), random.randrange(1,5,1), 'Cod'))
