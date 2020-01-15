@@ -198,10 +198,18 @@ def conHire(labelList, window, boat):
     player = game.playerList[game.turn]
     for x in range(3):
         hired.append(labelList[x].cget('text'))
-    for y in hired:
-        if int(y) < 0:
-            boat.hire(player, staff[hired.index(int(y))], int(y))
+    for y in range(3):
+        if int(hired[y]) > 0:
+            boat.hire(player, staff[y], hired[y])
     player.redoStats()
+    inda = player.boats.index(boat)
+    boatStatsView = getStats(player, inda)
+    player.labels[inda+1].configure(text= boatStatsView[0]+'\n'+boatStatsView[1]+
+        '\nHolding: '+boatStatsView[2]+' / '+boatStatsView[3]+
+        ' kg\nCrew: '+boatStatsView[4]+' / '+boatStatsView[5]+
+        '\nSells for: £'+boatStatsView[6]+
+        '0 \nCurrently: '+boatStatsView[7], font='Arial 10 bold')
+    player.labels[0].configure(text=player.stats)
     close(window)
 
 def hirepop(p):
@@ -347,7 +355,10 @@ class Player:
         print("Player %d (%s):  Money: %s" %(self.pnum,self.name,self.money))
         
     def redoStats(self):
-        self.stats = str(self.name + '  Money: '+str(self.money)+'  Boats: '+str(len(self.boats))+'  Staff: '+str(len(self.staff)))
+        staffno = 0
+        for x in self.staff:
+            staffno += len(x)
+        self.stats = str(self.name + '  Money: '+str(self.money)+'  Boats: '+str(len(self.boats))+'  Staff: '+str(staffno))
 
     def update(self):
         game.nextTurn()
@@ -451,13 +462,13 @@ class Boat:
 
     def hire(self, player, rank, hirereq):        #e.g. player1.boats[0].hire(player1, 'N', 1)
         index = player.boats.index(self)
-        if hirereq + len(self.crew) > self.size:
+        if int(hirereq) + len(self.crew) > self.size:
             print('Crew cannot exceed boat capacity')
         else:
             if len(self.crew) == 0:
                 emptyList = []
                 player.staff.append(emptyList)
-            for x in range(hirereq):
+            for x in range(int(hirereq)):
                 self.crew.append(rank)
                 player.staff[index].append(rank)
                 if rank == 'V':
