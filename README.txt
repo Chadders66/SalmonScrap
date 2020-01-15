@@ -28,7 +28,6 @@ Incomplete button functions:
  - Rename
  - Repair
  - Launch (**Chadders working on**)
- - Fire (**Andrew working on**)
  - Sell Fish (mechanic dependent)
 
 Extra improvements:

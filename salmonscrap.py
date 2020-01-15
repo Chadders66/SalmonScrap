@@ -211,18 +211,6 @@ def decremHire(label):
         var = 0
     label.configure(text=str(var))
 
-def incremFire(label):
-    var = int(label.cget('text'))
-    var += 1
-    label.configure(text=str(var))
-    
-def decremFire(label):
-    var = int(label.cget('text'))
-    var -= 1
-    if var < 0:
-        var = 0
-    label.configure(text=str(var))
-
 def conHire(labelList, window, boat):
     hired = []
     staff = ['N', 'E', 'V']
@@ -242,29 +230,6 @@ def conHire(labelList, window, boat):
         '0 \nCurrently: '+boatStatsView[7], font='Arial 10 bold')
     player.labels[0].configure(text=player.stats)
     playerEnable()
-    close(window)
-
-def conFire(labelList, window, boat):
-    fired = []
-    staff = ['N', 'E', 'V']
-    player = game.playerList[game.turn]
-    for x in range(3):
-        fired.append(labelList[x].cget('text'))
-    if int(fired[0]) > int(boat.crew.count('N')) or int(fired[0]) > int(boat.crew.count('E')) or int(fired[0]) > int(boat.crew.count('V')):
-        print('Crew cannot be negative')
-    else:
-        for y in range(3):
-            if int(fired[y]) > 0:
-                boat.fire(player, staff[y], fired[y])
-                player.redoStats()
-    inda = player.boats.index(boat)
-    boatStatsView = getStats(player, inda)
-    player.labels[inda+1].configure(text= boatStatsView[0]+'\n'+boatStatsView[1]+
-        '\nHolding: '+boatStatsView[2]+' / '+boatStatsView[3]+
-        ' kg\nCrew: '+boatStatsView[4]+' / '+boatStatsView[5]+
-        '\nSells for: £'+boatStatsView[6]+
-        '0 \nCurrently: '+boatStatsView[7], font='Arial 10 bold')
-    player.labels[0].configure(text=player.stats)
     close(window)
 
 def hirepop(p):
@@ -313,11 +278,46 @@ def hirepop(p):
     buttonList.append(Button(frameList[0], text='Cancel', width=10, command=lambda i=hirePop: close(i)))
     buttonList[7].grid(row=6, column=2, ipadx=10, ipady=10, sticky='W')
 
+def incremFire(label):
+    var = int(label.cget('text'))
+    var += 1
+    label.configure(text=str(var))
+    
+def decremFire(label):
+    var = int(label.cget('text'))
+    var -= 1
+    if var < 0:
+        var = 0
+    label.configure(text=str(var))
+
+def conFire(labelList, window, boat):
+    fired = []
+    staff = ['N', 'E', 'V']
+    player = game.playerList[game.turn]
+    for x in range(3):
+        fired.append(labelList[x].cget('text'))
+    if int(fired[0]) > int(boat.crew.count('N')) or int(fired[0]) > int(boat.crew.count('E')) or int(fired[0]) > int(boat.crew.count('V')):
+        print('Crew cannot be negative')
+    else:
+        for y in range(3):
+            if int(fired[y]) > 0:
+                boat.fire(player, staff[y], fired[y])
+                player.redoStats()
+    inda = player.boats.index(boat)
+    boatStatsView = getStats(player, inda)
+    player.labels[inda+1].configure(text= boatStatsView[0]+'\n'+boatStatsView[1]+
+        '\nHolding: '+boatStatsView[2]+' / '+boatStatsView[3]+
+        ' kg\nCrew: '+boatStatsView[4]+' / '+boatStatsView[5]+
+        '\nSells for: £'+boatStatsView[6]+
+        '0 \nCurrently: '+boatStatsView[7], font='Arial 10 bold')
+    player.labels[0].configure(text=player.stats)
+    close(window)
+
 def firepop(p):
     parse = whichButton(p)
-    boat = parse[1]
+    boatnum = parse[1]
     player = game.playerList[game.turn]
-    boat = player.boats[boat-1]
+    boat = player.boats[boatnum-1]
     inda = forSaleNames.index(boat.type)
     imageh = ImageTk.PhotoImage(imageList[inda])
     firePop = Toplevel()
@@ -331,19 +331,27 @@ def firepop(p):
     frameList.append(LabelFrame(firePop))
     frameList[0].grid(row=0, column=0, rowspan=6, columnspan=5, padx=5, pady=5)
     for a in range(3):                                         
-        labelList.append(Label(frameList[0], text=str(currList[a]), bg='Yellow'))    
+        labelList.append(Label(frameList[0], text=str(currList[a]), bg='Yellow', font='Arial 16 bold'))    
         labelList[a].grid(row=2*a, column=3, rowspan=2, ipadx=50, ipady=38)          
-    for b in range(3):                                          
-        labelList.append(Label(frameList[0], text="somethin"))   
+    for b in range(3):
+        crewinfo = ['Novice Crew\n£50 to hire \n£100 per week',
+                    'Experienced Crew\n£100 to hire\n£200 per week',
+                    'Veteran Crew\n £200 to hire\n £300 per week']                                            
+        labelList.append(Label(frameList[0], text=crewinfo[b], font='Arial 10 bold'))   
         labelList[b+3].grid(row=2*b, column=2, rowspan=2, ipadx=10, ipady=10)         
-    labelList.append(Label(frameList[0], image=imageh))   
+    boatStatsView = getStats(player, boatnum-1)        
+    labelList.append(Label(frameList[0], image=imageh, justify=CENTER, compound=CENTER, text= boatStatsView[0]+'\n'+boatStatsView[1]+
+        '\nHolding: '+boatStatsView[2]+' / '+boatStatsView[3]+
+        ' kg\nCrew: '+boatStatsView[4]+' / '+boatStatsView[5]+
+        '\nSells for: £'+boatStatsView[6]+
+        '0 \nCurrently: '+boatStatsView[7], font='Arial 10 bold'))   
     labelList[6].image = imageh
     labelList[6].grid(row=0, column=0, rowspan=6, columnspan=2)         
     for z in range(3):                                          
-        buttonList.append(Button(frameList[0], text='+', width=10, command=lambda p=labelList[z]: incremFire(p)))
+        buttonList.append(Button(frameList[0], text='+', width=10, font='Arial 10 bold', command=lambda p=labelList[z]: incremFire(p)))
         buttonList[z].grid(row=2*z, column=4, sticky='N', ipady=11)
     for x in range(3):
-        buttonList.append(Button(frameList[0], text='-', width=10, command=lambda p=labelList[x]: decremFire(p)))
+        buttonList.append(Button(frameList[0], text='-', width=10, font='Arial 10 bold', command=lambda p=labelList[x]: decremFire(p)))
         buttonList[x+3].grid(row=(2*x)+1, column=4, sticky='S', ipady=11)
     buttonList.append(Button(frameList[0], text='Confirm', width=10, command=lambda h=labelList, i=firePop, j=boat: conFire(h, i, j)))
     buttonList[6].grid(row=6, column=1, ipadx=10, ipady=10, sticky='E')
