@@ -179,17 +179,67 @@ def buyBoatpop():
 def sellFishpop():
     print('Bloop')
 
+def incremHire(label):
+    var = int(label.cget('text'))
+    var += 1
+    label.configure(text=str(var))
+    
+
+def decremHire(label):
+    var = int(label.cget('text'))
+    var -= 1
+    if var < 0:
+        var = 0
+    label.configure(text=str(var))
+
+def conHire(labelList, window, boat):
+    hired = []
+    staff = ['N', 'E', 'V']
+    player = game.playerList[game.turn]
+    for x in range(3):
+        hired.append(labelList[x].cget('text'))
+    for y in hired:
+        if int(y) < 0:
+            boat.hire(player, staff[hired.index(int(y))], int(y))
+    player.redoStats()
+    close(window)
+
 def hirepop(p):
     parse = whichButton(p)
-    if parse[0] != 0:
-        print('Error')
-    else:
-        print('hire')
-    if parse[1] < 1:
-        print('Error')
-    else:
-        print('Boat' + str(parse[1]))
-    print(game.playerList[game.turn].name)
+    boat = parse[1]
+    player = game.playerList[game.turn]
+    boat = player.boats[boat-1]
+    inda = forSaleNames.index(boat.type)
+    imageh = ImageTk.PhotoImage(imageList[inda])
+    hirePop = Toplevel()
+    frameList = []
+    labelList = []
+    buttonList = []
+    currN = 0
+    currE = 0
+    currV = 0
+    currList = [currN, currE, currV]
+    frameList.append(LabelFrame(hirePop))
+    frameList[0].grid(row=0, column=0, rowspan=6, columnspan=5, padx=5, pady=5)
+    for a in range(3):                                         
+        labelList.append(Label(frameList[0], text=str(currList[a]), bg='Yellow'))    
+        labelList[a].grid(row=2*a, column=3, rowspan=2, ipadx=50, ipady=38)          
+    for b in range(3):                                          
+        labelList.append(Label(frameList[0], text="somethin"))   
+        labelList[b+3].grid(row=2*b, column=2, rowspan=2, ipadx=10, ipady=10)         
+    labelList.append(Label(frameList[0], image=imageh))   
+    labelList[6].image = imageh
+    labelList[6].grid(row=0, column=0, rowspan=6, columnspan=2)         
+    for z in range(3):                                          
+        buttonList.append(Button(frameList[0], text='+', width=10, command=lambda p=labelList[z]: incremHire(p)))
+        buttonList[z].grid(row=2*z, column=4, sticky='N', ipady=11)
+    for x in range(3):
+        buttonList.append(Button(frameList[0], text='-', width=10, command=lambda p=labelList[x]: decremHire(p)))
+        buttonList[x+3].grid(row=(2*x)+1, column=4, sticky='S', ipady=11)
+    buttonList.append(Button(frameList[0], text='Confirm', width=10, command=lambda h=labelList, i=hirePop, j=boat: conHire(h, i, j)))
+    buttonList[6].grid(row=6, column=1, ipadx=10, ipady=10, sticky='E')
+    buttonList.append(Button(frameList[0], text='Cancel', width=10, command=lambda i=hirePop: close(i)))
+    buttonList[7].grid(row=6, column=2, ipadx=10, ipady=10, sticky='W')
     
 def launchpop(p):
     map_img = ImageTk.PhotoImage(imageList[9])
@@ -399,7 +449,8 @@ class Boat:
         '\nSells for: £'+boatStatsView[6]+
         '0 \nCurrently: '+boatStatsView[7], font='Arial 10 bold')
 
-    def hire(self, player, boat, rank, hirereq):        #e.g. player1.boats[0].hire(player1, 0, 'N', 1)
+    def hire(self, player, rank, hirereq):        #e.g. player1.boats[0].hire(player1, 'N', 1)
+        index = player.boats.index(self)
         if hirereq + len(self.crew) > self.size:
             print('Crew cannot exceed boat capacity')
         else:
@@ -408,7 +459,7 @@ class Boat:
                 player.staff.append(emptyList)
             for x in range(hirereq):
                 self.crew.append(rank)
-                player.staff[boat].append(rank)
+                player.staff[index].append(rank)
                 if rank == 'V':
                     player.money = player.money - 200       #Novice cost to hire
                 elif rank == 'E':
