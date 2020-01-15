@@ -36,7 +36,7 @@ with open(path + 'boats.json') as json_file:
 
 root = Tk()
 root.title("Salmon Scrap - Get the most fish!")
-root.geometry("1100x600+200+100")
+root.geometry("1170x600+160+100")
 
 class Gamestate:
     def __init__(self):
@@ -110,7 +110,7 @@ def whichButton(button):
     for x in range(len(buttonList)):
         if button in buttonList[x]:
             index = buttonList[x].index(button)
-            return index, x
+            return index, x                              #index = button , x = boat
 
 def playerEnable():
     mainDisable()
@@ -282,12 +282,27 @@ def launchpop(p):
     map_img = ImageTk.PhotoImage(imageList[9])
     launchPop = Toplevel()
     player = game.playerList[game.turn]
+    parse = whichButton(p)
+    boatnum = parse[1]
+    boatStatsView = getStats(player, boatnum-1)
+    boat = player.boats[boatnum-1]
+    inda = forSaleNames.index(boat.type)
+    imagel = ImageTk.PhotoImage(imageList[inda])
     launchPop.title(player.name + ": choose a location to fish")
-    launchPop.geometry("1000x590+230+100")
+    launchPop.geometry("920x610+280+100")
     launchLabels = []
     launchLabels.append(Label(launchPop, image=map_img))
     launchLabels[0].image = map_img
-    launchLabels[0].grid(row=0, column=0, rowspan=4)
+    launchLabels[0].grid(row=0, column=0, rowspan=5, padx=30, pady=20)
+    launchLabels.append(Label(launchPop, image=imagel, justify=CENTER, compound=CENTER, text = boatStatsView[0]+'\n'+boatStatsView[1]+
+        '\nHolding: '+boatStatsView[2]+' / '+boatStatsView[3]+
+        ' kg\nCrew: '+boatStatsView[4]+' / '+boatStatsView[5]+
+        '\nSells for: £'+boatStatsView[6]+
+        '0 \nCurrently: '+boatStatsView[7], font='Arial 10 bold'))
+    launchLabels[1].image = imagel
+    launchLabels[1].grid(row=0, column=2, rowspan=2, padx=20, sticky='E')
+    launchLabels.append(Label(launchPop, text='Choose a location\nto view information\nabout it here', justify=CENTER, font='Arial 10'))
+    launchLabels[2].grid(row=0, column=3, rowspan=2, padx=30, sticky='E')
 
 def renamepop(p):
     print('rename')
@@ -308,8 +323,8 @@ def populateFrames():
         exit()
     for x in range(len(game.playerList)):
         buttonList1 = []
-        game.playerList[x].labels.append(Label(game.playerList[x].frame, text=game.playerList[x].stats))
-        game.playerList[x].labels[0].grid(row=6, column=2, columnspan=3, padx=10, pady=10)
+        game.playerList[x].labels.append(Label(game.playerList[x].frame, text=game.playerList[x].stats, font='Arial 10 bold', justify=CENTER))
+        game.playerList[x].labels[0].grid(row=6, column=2, columnspan=3, padx=10, pady=10, sticky='W')
         for a in range(3):
             playerButtons = ['Sell Fish', 'End Turn', 'Buy Boat']
             playerCommands = [sellFishpop, endTurnpop, buyBoatpop]
