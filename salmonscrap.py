@@ -17,7 +17,7 @@ imageList = []
 masterButtons = []
 
 help1 = [0, 0, 1, 1]
-help2 = [0, 1, 0, 1]
+help2 = [0, 2, 0, 2]
 
 help3 = [0, 0, 3, 3]
 help4 = [0, 4, 0, 4]
@@ -41,7 +41,7 @@ root.geometry("1170x600+160+100")
 class Gamestate:
     def __init__(self):
         self.turn = 0
-        self.player = 'Andrew'
+        self.player = ''
         self.playerList = []
         self.players = len(self.playerList)
         self.day = 'Monday'
@@ -51,10 +51,12 @@ class Gamestate:
         self.week = 0
         self.dayList = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
         self.timeList = ['4AM', '10AM', '4PM', '10PM']
-        self.stateString = self.player +' '+ self.day + ' ' + self.time + ' ' + str(self.week)
+        self.stateString = self.day + ' ' + self.time + ' ' + str(self.week)
+        self.label = Label(root, text=self.stateString, font= 'Arial 12 bold')
+        self.label.grid(row=2, column=1)
 
     def redoString(self):
-        self.stateString = self.player.name +' '+ self.day + ' ' + self.time + ' ' + str(self.week)
+        self.stateString = self.day + ' ' + self.time + ' Week ' + str(self.week)
 
     def nextTurn(self):
         if self.turn == self.players-1:
@@ -78,6 +80,7 @@ class Gamestate:
             self.turn += 1
             self.player = self.playerList[self.turn]
         self.redoString()
+        self.label.configure(text=game.stateString)
 
 def initBoats():
     for x in range(len(forSaleNames)):
@@ -296,7 +299,7 @@ def conFire(labelList, window, boat):
     player = game.playerList[game.turn]
     for x in range(3):
         fired.append(labelList[x].cget('text'))
-    if int(fired[0]) > int(boat.crew.count('N')) or int(fired[0]) > int(boat.crew.count('E')) or int(fired[0]) > int(boat.crew.count('V')):
+    if int(fired[0]) > int(boat.crew.count('N')) or int(fired[1]) > int(boat.crew.count('E')) or int(fired[2]) > int(boat.crew.count('V')):
         print('Crew cannot be negative')
     else:
         for y in range(3):
@@ -395,6 +398,8 @@ def repairpop(p):
 
 def populateFrames():
     img_blank = ImageTk.PhotoImage(imageList[8])
+    game.redoString()
+    game.label.configure(text=game.stateString)
     if len(game.playerList) > 4:
         print('Too many players!')
         exit()
@@ -483,7 +488,7 @@ class Player:
 
     def update(self):
         game.nextTurn()
-        if game.day == 'Friday':
+        if game.day == 'Friday' and game.time == '10AM':
             for x in range (len(self.staff)):                                   #Paying Wages
                 self.money = self.money - (self.staff[x].count('N') * 100)      #Novice weekly wages
                 self.money = self.money - (self.staff[x].count('E') * 200)      #Expert weekly wages
@@ -645,7 +650,6 @@ initLoc()
 game = Gamestate()
 
 player1 = Player("Andrew")
-player2 = Player("Chadders")
 
 populateFrames()
 
